@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+/frontend/node_modules/
+/server/node_modules/
+
+# Environment variables
+.env
+
+# Build files
+/frontend/dist/
+/frontend/build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+*.log
+
+# IDE specific files
+.vscode/
+.idea/
+*.iml
+*.swp
+*.swo
+.DS_Store
