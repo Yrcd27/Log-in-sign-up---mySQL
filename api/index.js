@@ -19,14 +19,26 @@ const connectDatabase = async () => {
     });
     
     // Create connection based on available credentials
+    const sslOptions = { 
+      rejectUnauthorized: false // Allow self-signed certificates
+    };
+    
     if (process.env.DATABASE_URL) {
-      return await mysql.createConnection(process.env.DATABASE_URL);
+      // Parse the DATABASE_URL to add SSL options
+      const connectionConfig = process.env.DATABASE_URL;
+      return await mysql.createConnection({
+        uri: connectionConfig,
+        ssl: sslOptions,
+        connectTimeout: 60000 // 60 seconds
+      });
     } else {
       return await mysql.createConnection({
         host: process.env.DB_HOST,
         user: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME
+        database: process.env.DB_NAME,
+        ssl: sslOptions,
+        connectTimeout: 60000 // 60 seconds
       });
     }
   } catch (error) {
