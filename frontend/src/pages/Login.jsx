@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import api from '../api/axios'
 
 const Login = () => {
   // Initialize navigation function
@@ -32,7 +32,7 @@ const Login = () => {
     
     try {
       // Make API request to login - using relative URL for deployment compatibility
-      const response = await axios.post('/auth/login', values);
+      const response = await api.post('/auth/login', values);
       
       // Extract token and user data from response
       const { token, user } = response.data;

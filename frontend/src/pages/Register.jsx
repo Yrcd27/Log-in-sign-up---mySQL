@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import api from '../api/axios'
 
 
 const Register = () => {
@@ -33,7 +33,7 @@ const Register = () => {
     
     try {
       // Make API request to register - using relative URL for deployment compatibility
-      const response = await axios.post('/auth/register', values);
+      const response = await api.post('/auth/register', values);
       
       // Show success message
       setStatus({ 
