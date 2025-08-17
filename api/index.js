@@ -94,7 +94,7 @@ app.get('/api/debug/db', async (req, res) => {
 
 // Authentication routes directly implemented here
 // Register route
-app.post('/auth/register', async (req, res) => {
+app.post('/api/auth/register', async (req, res) => {
   const {username, email, password} = req.body;
   console.log('Register request received:', { username, email });
   
@@ -129,7 +129,7 @@ app.post('/auth/register', async (req, res) => {
 });
 
 // Login route
-app.post('/auth/login', async (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
   const {email, password} = req.body;
   console.log('Login request received for email:', email);
   
@@ -187,6 +187,21 @@ app.post('/auth/login', async (req, res) => {
 // Health check endpoint
 app.get('/api', (req, res) => {
   res.status(200).json({ status: 'API is running' });
+});
+
+// Duplicate routes for compatibility with different frontend configurations
+app.post('/auth/register', async (req, res) => {
+  // Forward the request to the actual handler
+  const originalUrl = req.originalUrl;
+  req.originalUrl = '/api' + originalUrl;
+  app._router.handle(req, res);
+});
+
+app.post('/auth/login', async (req, res) => {
+  // Forward the request to the actual handler
+  const originalUrl = req.originalUrl;
+  req.originalUrl = '/api' + originalUrl;
+  app._router.handle(req, res);
 });
 
 // Schema verification endpoint
