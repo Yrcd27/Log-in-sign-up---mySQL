@@ -189,6 +189,64 @@ app.get('/api', (req, res) => {
   res.status(200).json({ status: 'API is running' });
 });
 
+// Schema verification endpoint
+app.get('/api/debug/schema', async (req, res) => {
+  try {
+    console.log('Verifying database schema...');
+    
+    const connection = await connectDatabase();
+    
+    // Check if users table exists
+    const [tables] = await connection.query('SHOW TABLES LIKE "users"');
+    
+    if (tables.length === 0) {
+      console.log('Users table not found, creating it...');
+      
+      // Create users table
+      await connection.query(`
+        CREATE TABLE IF NOT EXISTS users (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          username VARCHAR(255) NOT NULL UNIQUE,
+          email VARCHAR(255) NOT NULL UNIQUE,
+          password VARCHAR(255) NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+      
+      await connection.end();
+      return res.status(200).json({ 
+        status: 'Success', 
+        message: 'Users table was created successfully' 
+      });
+    }
+    
+    // Check table structure
+    const [columns] = await connection.query('DESCRIBE users');
+    await connection.end();
+    
+    res.status(200).json({
+      status: 'Success',
+      message: 'Users table already exists',
+      schema: columns.map(col => ({
+        field: col.Field,
+        type: col.Type,
+        null: col.Null,
+        key: col.Key
+      }))
+    });
+    
+  } catch (error) {
+    console.error('Schema verification error:', error);
+    res.status(500).json({
+      status: 'Error',
+      message: 'Failed to verify database schema',
+      error: error.message,
+      code: error.code,
+      errno: error.errno
+    });
+  }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
