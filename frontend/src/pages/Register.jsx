@@ -32,8 +32,8 @@ const Register = () => {
     setStatus({ loading: true, error: null, success: null });
     
     try {
-      // Make API request to register
-      const response = await axios.post('http://localhost:3000/auth/register', values);
+      // Make API request to register - using relative URL for deployment compatibility
+      const response = await axios.post('/auth/register', values);
       
       // Show success message
       setStatus({ 

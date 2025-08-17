@@ -31,8 +31,8 @@ const Login = () => {
     setStatus({ loading: true, error: null });
     
     try {
-      // Make API request to login
-      const response = await axios.post('http://localhost:3000/auth/login', values);
+      // Make API request to login - using relative URL for deployment compatibility
+      const response = await axios.post('/auth/login', values);
       
       // Extract token and user data from response
       const { token, user } = response.data;
